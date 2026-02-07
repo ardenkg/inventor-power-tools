@@ -35,6 +35,7 @@ namespace Threader.UI
         private List<CylinderInfo> _selectedCylinders = new();
         
         // Two-step thread selection
+        private string _selectedThreadFamily = "ISO";
         private List<double> _availableDiameters = new();
         private List<ThreadStandard> _pitchOptions = new();
         private ThreadStandard? _selectedThread;
@@ -312,6 +313,16 @@ namespace Threader.UI
             SelectionRequested?.Invoke();
         }
 
+        private void cboThreadStandard_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            // Map combo index to thread family string
+            _selectedThreadFamily = cboThreadStandard.SelectedIndex == 1 ? "ANSI" : "ISO";
+
+            // Reload sizes and pitches for the selected standard
+            LoadMatchingThreads();
+            UpdatePreview();
+        }
+
         private void cboThreadDesignation_SelectedIndexChanged(object? sender, EventArgs e)
         {
             // M size selected - load pitch options for this size
@@ -377,6 +388,7 @@ namespace Threader.UI
             
             // Enable/disable controls based on state
             cboThreadDesignation.Enabled = hasCylinder;
+            cboThreadStandard.Enabled = hasCylinder;
             numThreadLength.Enabled = hasCylinder && hasThread;
             chkReverseDirection.Enabled = hasCylinder && hasThread;
             chkRightHand.Enabled = hasCylinder && hasThread;
@@ -450,14 +462,15 @@ namespace Threader.UI
                 return;
             }
 
-            // Get unique M sizes for the appropriate type (internal/external)
-            var (sizes, diameters, recommendedIndex) = _threadDataManager.GetAvailableMSizes(
+            // Get unique sizes for the appropriate type and standard (internal/external)
+            var (sizes, diameters, recommendedIndex) = _threadDataManager.GetAvailableSizes(
                 firstCylinder.IsInternal,
-                firstCylinder.DiameterCm);
+                firstCylinder.DiameterCm,
+                _selectedThreadFamily);
 
             _availableDiameters = diameters;
 
-            // Populate the M size combo box
+            // Populate the size combo box
             for (int i = 0; i < sizes.Count; i++)
             {
                 string displayText;
@@ -501,27 +514,31 @@ namespace Threader.UI
                 return;
             }
 
-            // Get pitch options for this M size
+            // Get pitch options for this size and standard
             _pitchOptions = _threadDataManager.GetPitchOptionsForSize(
                 nominalDiameterCm,
-                firstCylinder.IsInternal);
+                firstCylinder.IsInternal,
+                _selectedThreadFamily);
 
             // Populate pitch combo box with cleaner formatting
             for (int i = 0; i < _pitchOptions.Count; i++)
             {
                 var thread = _pitchOptions[i];
-                double pitchMm = thread.Pitch * 10;
-                string pitchStr = pitchMm % 1 == 0 ? $"{pitchMm:F0}" : $"{pitchMm:G3}";
-                
                 string displayText;
-                if (i == 0)
+
+                if (_selectedThreadFamily == "ANSI")
                 {
-                    // First one is coarse pitch (standard)
-                    displayText = $"{pitchStr} mm - Coarse";
+                    // Show TPI for ANSI threads
+                    double tpi = 2.54 / thread.Pitch;  // Pitch is in cm
+                    string tpiStr = Math.Abs(tpi - Math.Round(tpi)) < 0.01 ? $"{tpi:F0}" : $"{tpi:F1}";
+                    displayText = i == 0 ? $"{tpiStr} TPI - Coarse" : $"{tpiStr} TPI - Fine";
                 }
                 else
                 {
-                    displayText = $"{pitchStr} mm - Fine";
+                    // Show mm for ISO threads
+                    double pitchMm = thread.Pitch * 10;
+                    string pitchStr = pitchMm % 1 == 0 ? $"{pitchMm:F0}" : $"{pitchMm:G3}";
+                    displayText = i == 0 ? $"{pitchStr} mm - Coarse" : $"{pitchStr} mm - Fine";
                 }
                 
                 cboPitch.Items.Add(displayText);

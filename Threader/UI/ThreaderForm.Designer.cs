@@ -55,6 +55,9 @@ namespace Threader.UI
             this.pnlThreadSection = new System.Windows.Forms.Panel();
             this.lblThreadHeader = new System.Windows.Forms.Label();
             this.btnThreadCollapse = new System.Windows.Forms.Label();
+            this.pnlThreadStandard = new System.Windows.Forms.Panel();
+            this.lblStandard = new System.Windows.Forms.Label();
+            this.cboThreadStandard = new System.Windows.Forms.ComboBox();
             this.pnlThreadDesignation = new System.Windows.Forms.Panel();
             this.lblDesignation = new System.Windows.Forms.Label();
             this.cboThreadDesignation = new System.Windows.Forms.ComboBox();
@@ -87,6 +90,7 @@ namespace Threader.UI
             this.pnlSelectCylinder.SuspendLayout();
             this.pnlCylinderDetails.SuspendLayout();
             this.pnlThreadSection.SuspendLayout();
+            this.pnlThreadStandard.SuspendLayout();
             this.pnlThreadDesignation.SuspendLayout();
             this.pnlThreadDetails.SuspendLayout();
             this.pnlOptionsSection.SuspendLayout();
@@ -130,7 +134,7 @@ namespace Threader.UI
             // =====================================================
             this.pnlMain.BackColor = bgColor;
             this.pnlMain.Location = new System.Drawing.Point(0, 32);
-            this.pnlMain.Size = new System.Drawing.Size(340, 510);
+            this.pnlMain.Size = new System.Drawing.Size(340, 540);
             this.pnlMain.AutoScroll = true;
             this.pnlMain.Controls.Add(this.pnlOptionsSection);
             this.pnlMain.Controls.Add(this.pnlThreadSection);
@@ -223,7 +227,7 @@ namespace Threader.UI
             // =====================================================
             this.pnlThreadSection.BackColor = bgColor;
             this.pnlThreadSection.Location = new System.Drawing.Point(8, 116);
-            this.pnlThreadSection.Size = new System.Drawing.Size(320, 140);
+            this.pnlThreadSection.Size = new System.Drawing.Size(320, 170);
 
             this.lblThreadHeader.AutoSize = false;
             this.lblThreadHeader.Location = new System.Drawing.Point(0, 0);
@@ -241,9 +245,36 @@ namespace Threader.UI
             this.btnThreadCollapse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnThreadCollapse.Cursor = System.Windows.Forms.Cursors.Hand;
 
-            // M Size row
+            // Thread Standard row (ISO / ANSI)
+            this.pnlThreadStandard.BackColor = System.Drawing.Color.Transparent;
+            this.pnlThreadStandard.Location = new System.Drawing.Point(0, 24);
+            this.pnlThreadStandard.Size = new System.Drawing.Size(280, 30);
+            this.pnlThreadStandard.Controls.Add(this.lblStandard);
+            this.pnlThreadStandard.Controls.Add(this.cboThreadStandard);
+
+            this.lblStandard.AutoSize = false;
+            this.lblStandard.Location = new System.Drawing.Point(4, 0);
+            this.lblStandard.Size = new System.Drawing.Size(60, 30);
+            this.lblStandard.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblStandard.ForeColor = textColor;
+            this.lblStandard.Text = "Standard";
+            this.lblStandard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+            this.cboThreadStandard.Location = new System.Drawing.Point(68, 4);
+            this.cboThreadStandard.Size = new System.Drawing.Size(140, 24);
+            this.cboThreadStandard.BackColor = System.Drawing.Color.White;
+            this.cboThreadStandard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboThreadStandard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cboThreadStandard.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.cboThreadStandard.ForeColor = System.Drawing.Color.Black;
+            this.cboThreadStandard.Items.AddRange(new object[] { "ISO Metric", "ANSI Unified" });
+            this.cboThreadStandard.SelectedIndex = 0;
+            this.cboThreadStandard.Enabled = false;
+            this.cboThreadStandard.SelectedIndexChanged += new System.EventHandler(this.cboThreadStandard_SelectedIndexChanged);
+
+            // M Size / ANSI Size row
             this.pnlThreadDesignation.BackColor = System.Drawing.Color.Transparent;
-            this.pnlThreadDesignation.Location = new System.Drawing.Point(0, 24);
+            this.pnlThreadDesignation.Location = new System.Drawing.Point(0, 54);
             this.pnlThreadDesignation.Size = new System.Drawing.Size(280, 30);
             this.pnlThreadDesignation.Controls.Add(this.lblDesignation);
             this.pnlThreadDesignation.Controls.Add(this.cboThreadDesignation);
@@ -292,7 +323,7 @@ namespace Threader.UI
 
             // Thread details panel
             this.pnlThreadDetails.BackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.pnlThreadDetails.Location = new System.Drawing.Point(0, 58);
+            this.pnlThreadDetails.Location = new System.Drawing.Point(0, 88);
             this.pnlThreadDetails.Size = new System.Drawing.Size(280, 78);
             this.pnlThreadDetails.Controls.Add(this.lblThreadInfo);
             this.pnlThreadDetails.Controls.Add(this.lblPitch);
@@ -333,6 +364,7 @@ namespace Threader.UI
 
             this.pnlThreadSection.Controls.Add(this.lblThreadHeader);
             this.pnlThreadSection.Controls.Add(this.btnThreadCollapse);
+            this.pnlThreadSection.Controls.Add(this.pnlThreadStandard);
             this.pnlThreadSection.Controls.Add(this.pnlThreadDesignation);
             this.pnlThreadSection.Controls.Add(this.pnlThreadDetails);
 
@@ -340,7 +372,7 @@ namespace Threader.UI
             // Options Section
             // =====================================================
             this.pnlOptionsSection.BackColor = bgColor;
-            this.pnlOptionsSection.Location = new System.Drawing.Point(8, 264);
+            this.pnlOptionsSection.Location = new System.Drawing.Point(8, 294);
             this.pnlOptionsSection.Size = new System.Drawing.Size(320, 203);
 
             this.lblOptionsHeader.AutoSize = false;
@@ -503,7 +535,7 @@ namespace Threader.UI
             // pnlFooter - Apply/Done/Cancel buttons
             // =====================================================
             this.pnlFooter.BackColor = bgColor;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 572);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 602);
             this.pnlFooter.Size = new System.Drawing.Size(340, 48);
 
             this.btnApply.BackColor = buttonColor;
@@ -551,7 +583,7 @@ namespace Threader.UI
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = bgColor;
-            this.ClientSize = new System.Drawing.Size(340, 620);
+            this.ClientSize = new System.Drawing.Size(340, 650);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlFooter);
             this.Controls.Add(this.pnlHeader);
@@ -570,6 +602,7 @@ namespace Threader.UI
             this.pnlSelectCylinder.ResumeLayout(false);
             this.pnlCylinderDetails.ResumeLayout(false);
             this.pnlThreadSection.ResumeLayout(false);
+            this.pnlThreadStandard.ResumeLayout(false);
             this.pnlThreadDesignation.ResumeLayout(false);
             this.pnlThreadDetails.ResumeLayout(false);
             this.pnlOptionsSection.ResumeLayout(false);
@@ -615,6 +648,9 @@ namespace Threader.UI
         private System.Windows.Forms.Panel pnlThreadSection;
         private System.Windows.Forms.Label lblThreadHeader;
         private System.Windows.Forms.Label btnThreadCollapse;
+        private System.Windows.Forms.Panel pnlThreadStandard;
+        private System.Windows.Forms.Label lblStandard;
+        private System.Windows.Forms.ComboBox cboThreadStandard;
         private System.Windows.Forms.Panel pnlThreadDesignation;
         private System.Windows.Forms.Label lblDesignation;
         private System.Windows.Forms.ComboBox cboThreadDesignation;

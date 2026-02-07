@@ -30,7 +30,7 @@ NX-style topology selection, face coloring, and physical thread generation for A
 |--------|-------------|
 | [CaseSelection](CaseSelection/) | NX-style smart face selection with topology filters (tangent, boss/pocket, feature, blend) |
 | [ColoringTool](ColoringTool/) | Select faces with topology filters and apply any color via Inventor's appearance system |
-| [Threader](Threader/) | Generate physical helical thread geometry from cylindrical faces using ISO Metric standards |
+| [Threader](Threader/) | Generate physical helical thread geometry from cylindrical faces using ISO Metric and ANSI Unified standards |
 
 ## Quick Start
 

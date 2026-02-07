@@ -2,7 +2,7 @@
 
 ## Overview
 
-Threader is an Autodesk Inventor 2026 add-in that generates **physical geometric threads** (modeled geometry/coils) from cylindrical faces using ISO Metric Profile standards. Unlike cosmetic threads, this add-in creates actual 3D helical geometry.
+Threader is an Autodesk Inventor 2026 add-in that generates **physical geometric threads** (modeled geometry/coils) from cylindrical faces using ISO Metric and ANSI Unified thread standards. Unlike cosmetic threads, this add-in creates actual 3D helical geometry.
 
 <p align="center">
   <img src="../images/ThreaderInterface.png" alt="Threader Interface">
@@ -16,10 +16,12 @@ Threader is an Autodesk Inventor 2026 add-in that generates **physical geometric
 
 - **Cylindrical Face Selection** — Select any cylindrical face on a part to create threads
 - **Automatic Diameter Detection** — Detects the diameter and length of the selected cylinder
-- **ISO Metric Profile Standards** — Queries Inventor's internal thread data for ISO Metric threads
+- **ISO Metric & ANSI Unified Standards** — Supports both ISO Metric (M1–M64) and ANSI Unified (UNC/UNF) thread families
+- **Thread Standard Selector** — Dropdown to switch between ISO Metric and ANSI Unified standards
 - **Smart Thread Matching** — Filters available thread designations based on the cylinder's diameter
 - **Real-time Preview** — ClientGraphics-based preview shows thread location before creation
 - **Physical Thread Generation** — Creates actual helical coil geometry, not just cosmetic annotations
+- **Clean Overshoot Trimming** — Always trims both ends of the thread coil to prevent geometry from affecting adjacent features
 - **Internal & External** — Supports both holes (cut) and shafts (join)
 - **Apply/Done/Close Workflow**:
   - **Apply** — Creates the thread and keeps the dialog open
@@ -99,9 +101,11 @@ Threader is an Autodesk Inventor 2026 add-in that generates **physical geometric
 - Internal (holes) and external (shafts) cylinders are both supported
 
 ### Thread Designation
-- Dropdown shows ISO Metric threads that match the cylinder diameter
+- **Standard** dropdown lets you switch between ISO Metric and ANSI Unified threads
+- **Size** dropdown shows thread sizes that match the cylinder diameter (M-sizes for ISO, fractional/decimal inch for ANSI)
+- **Pitch** dropdown shows available pitches — displayed as mm for ISO and TPI for ANSI
+- Coarse and fine pitch options available for both standards
 - Displays pitch, major diameter, and minor diameter
-- Coarse and fine pitch options available
 
 ### Options
 - **Thread Length** — Adjust the length of threads (defaults to full cylinder length)
@@ -115,9 +119,15 @@ Threader is an Autodesk Inventor 2026 add-in that generates **physical geometric
 
 ## Supported Thread Standards
 
+### ISO Metric
 - ISO Metric Coarse (M1–M64)
 - ISO Metric Fine (M8x1, M10x1.25, etc.)
-- Both internal and external threads
+
+### ANSI Unified (ASME B1.1)
+- Unified National Coarse (UNC) — #1 through 2"
+- Unified National Fine (UNF) — #0 through 1-1/2"
+
+Both internal and external threads are supported for all standards.
 
 ## Technical Details
 
@@ -146,7 +156,7 @@ Threader/
 ├── Threader.csproj                     # Project file (.NET 8.0)
 ├── Core/
 │   ├── CylinderAnalyzer.cs             # Analyzes cylindrical faces
-│   ├── ThreadDataManager.cs            # Manages ISO Metric thread data
+│   ├── ThreadDataManager.cs             # Manages ISO Metric & ANSI Unified thread data
 │   ├── ThreadGenerator.cs              # Creates physical thread geometry
 │   └── ThreadPreviewManager.cs         # ClientGraphics preview rendering
 ├── UI/

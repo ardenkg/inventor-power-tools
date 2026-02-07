@@ -24,6 +24,8 @@ namespace Threader.Core
         public string ThreadType { get; set; } = "";  // "ISO Metric profile"
         public bool IsInternal { get; set; }
         public string FullThreadName { get; set; } = "";
+        public string ThreadFamily { get; set; } = "ISO";  // "ISO" or "ANSI"
+        public string SizeLabel { get; set; } = "";          // e.g., "M8" for ISO, "1/4\"" for ANSI
         
         /// <summary>
         /// Tap drill diameter - approximation for internal threads
@@ -80,7 +82,7 @@ namespace Threader.Core
                 // Load ISO Metric thread data from built-in table
                 LoadFallbackThreadData();
                 _isInitialized = true;
-                System.Diagnostics.Debug.WriteLine($"ThreadDataManager: Loaded {_allThreadStandards.Count} ISO Metric thread standards.");
+                System.Diagnostics.Debug.WriteLine($"ThreadDataManager: Loaded {_allThreadStandards.Count} thread standards (ISO + ANSI).");
             }
             catch (Exception ex)
             {
@@ -166,29 +168,31 @@ namespace Threader.Core
         /// Gets unique M sizes (nominal diameters) available for the specified thread type.
         /// Returns list of M size strings (e.g., "M3", "M4", "M5") with recommended index.
         /// </summary>
-        public (List<string> Sizes, List<double> Diameters, int RecommendedIndex) GetAvailableMSizes(bool isInternal, double currentDiameterCm)
+        public (List<string> Sizes, List<double> Diameters, int RecommendedIndex) GetAvailableSizes(bool isInternal, double currentDiameterCm, string threadFamily = "ISO")
         {
             if (!_isInitialized)
             {
                 Initialize();
             }
 
+            var filtered = _allThreadStandards
+                .Where(t => t.IsInternal == isInternal && t.ThreadFamily == threadFamily)
+                .ToList();
+
             // Get unique nominal diameters (rounded to avoid floating point duplicates)
-            var uniqueDiameters = _allThreadStandards
-                .Where(t => t.IsInternal == isInternal)
+            var uniqueDiameters = filtered
                 .Select(t => Math.Round(t.NominalDiameter, 4))
                 .Distinct()
                 .OrderBy(d => d)
                 .ToList();
 
-            // Create M size labels - show decimal only when not a whole number
-            var sizes = uniqueDiameters.Select(d => {
-                double mm = d * 10;
-                if (Math.Abs(mm - Math.Round(mm)) < 0.01)
-                    return $"M{mm:F0}";
-                else
-                    return $"M{mm:G3}";
-            }).ToList();
+            // Get size labels from the thread data
+            var sizes = new List<string>();
+            foreach (var d in uniqueDiameters)
+            {
+                var thread = filtered.First(t => Math.Abs(Math.Round(t.NominalDiameter, 4) - d) < 0.00001);
+                sizes.Add(thread.SizeLabel);
+            }
 
             // Find recommended index
             int recommendedIndex = 0;
@@ -211,7 +215,7 @@ namespace Threader.Core
         /// <summary>
         /// Gets available pitch options for a specific M size.
         /// </summary>
-        public List<ThreadStandard> GetPitchOptionsForSize(double nominalDiameterCm, bool isInternal)
+        public List<ThreadStandard> GetPitchOptionsForSize(double nominalDiameterCm, bool isInternal, string threadFamily = "ISO")
         {
             if (!_isInitialized)
             {
@@ -219,7 +223,9 @@ namespace Threader.Core
             }
 
             return _allThreadStandards
-                .Where(t => t.IsInternal == isInternal && Math.Abs(t.NominalDiameter - nominalDiameterCm) < 0.001)
+                .Where(t => t.IsInternal == isInternal &&
+                            t.ThreadFamily == threadFamily &&
+                            Math.Abs(t.NominalDiameter - nominalDiameterCm) < 0.001)
                 .OrderByDescending(t => t.Pitch)  // Coarse (larger pitch) first
                 .ToList();
         }
@@ -354,6 +360,8 @@ namespace Threader.Core
             // Add coarse threads (external and internal)
             foreach (var (designation, nomDia, pitch, minorDia, pitchDia) in isoMetricCoarse)
             {
+                string sizeLabel = designation.Contains('x') ? designation.Substring(0, designation.IndexOf('x')) : designation;
+
                 _allThreadStandards.Add(new ThreadStandard
                 {
                     Designation = designation,
@@ -364,7 +372,9 @@ namespace Threader.Core
                     PitchDiameter = pitchDia / 10.0,
                     ThreadType = "ISO Metric profile",
                     IsInternal = false,
-                    FullThreadName = $"ISO Metric profile - {designation}"
+                    FullThreadName = $"ISO Metric profile - {designation}",
+                    ThreadFamily = "ISO",
+                    SizeLabel = sizeLabel
                 });
 
                 // Add internal thread version
@@ -378,13 +388,17 @@ namespace Threader.Core
                     PitchDiameter = pitchDia / 10.0,
                     ThreadType = "ISO Metric profile",
                     IsInternal = true,
-                    FullThreadName = $"ISO Metric profile - {designation} (Internal)"
+                    FullThreadName = $"ISO Metric profile - {designation} (Internal)",
+                    ThreadFamily = "ISO",
+                    SizeLabel = sizeLabel
                 });
             }
 
             // Add fine threads (external and internal)
             foreach (var (designation, nomDia, pitch, minorDia, pitchDia) in isoMetricFine)
             {
+                string sizeLabel = designation.Contains('x') ? designation.Substring(0, designation.IndexOf('x')) : designation;
+
                 _allThreadStandards.Add(new ThreadStandard
                 {
                     Designation = designation,
@@ -395,7 +409,9 @@ namespace Threader.Core
                     PitchDiameter = pitchDia / 10.0,
                     ThreadType = "ISO Metric profile",
                     IsInternal = false,
-                    FullThreadName = $"ISO Metric profile - {designation}"
+                    FullThreadName = $"ISO Metric profile - {designation}",
+                    ThreadFamily = "ISO",
+                    SizeLabel = sizeLabel
                 });
 
                 // Add internal thread version
@@ -409,11 +425,157 @@ namespace Threader.Core
                     PitchDiameter = pitchDia / 10.0,
                     ThreadType = "ISO Metric profile",
                     IsInternal = true,
-                    FullThreadName = $"ISO Metric profile - {designation} (Internal)"
+                    FullThreadName = $"ISO Metric profile - {designation} (Internal)",
+                    ThreadFamily = "ISO",
+                    SizeLabel = sizeLabel
                 });
             }
 
-            System.Diagnostics.Debug.WriteLine($"Loaded {_allThreadStandards.Count} fallback thread standards.");
+            // ================================================================
+            // ANSI Unified Screw Threads (UNC / UNF) - ASME B1.1
+            // Dimensions in inches, converted to cm for Inventor.
+            // 60° thread form: pitch dia = D - 0.64952×P, minor dia = D - 1.08253×P
+            // ================================================================
+
+            // ANSI Unified National Coarse (UNC)
+            // (Designation, NominalDia_inches, TPI, SizeLabel)
+            var ansiUnifiedCoarse = new (string designation, double nomDia, double tpi, string sizeLabel)[]
+            {
+                ("#1-64 UNC",    0.0730,  64,   "0.073\""),
+                ("#2-56 UNC",    0.0860,  56,   "0.086\""),
+                ("#3-48 UNC",    0.0990,  48,   "0.099\""),
+                ("#4-40 UNC",    0.1120,  40,   "0.112\""),
+                ("#5-40 UNC",    0.1250,  40,   "0.125\""),
+                ("#6-32 UNC",    0.1380,  32,   "0.138\""),
+                ("#8-32 UNC",    0.1640,  32,   "0.164\""),
+                ("#10-24 UNC",   0.1900,  24,   "0.190\""),
+                ("#12-24 UNC",   0.2160,  24,   "0.216\""),
+                ("1/4-20 UNC",   0.2500,  20,   "1/4\""),
+                ("5/16-18 UNC",  0.3125,  18,   "5/16\""),
+                ("3/8-16 UNC",   0.3750,  16,   "3/8\""),
+                ("7/16-14 UNC",  0.4375,  14,   "7/16\""),
+                ("1/2-13 UNC",   0.5000,  13,   "1/2\""),
+                ("9/16-12 UNC",  0.5625,  12,   "9/16\""),
+                ("5/8-11 UNC",   0.6250,  11,   "5/8\""),
+                ("3/4-10 UNC",   0.7500,  10,   "3/4\""),
+                ("7/8-9 UNC",    0.8750,   9,   "7/8\""),
+                ("1-8 UNC",      1.0000,   8,   "1\""),
+                ("1-1/8-7 UNC",  1.1250,   7,   "1-1/8\""),
+                ("1-1/4-7 UNC",  1.2500,   7,   "1-1/4\""),
+                ("1-3/8-6 UNC",  1.3750,   6,   "1-3/8\""),
+                ("1-1/2-6 UNC",  1.5000,   6,   "1-1/2\""),
+                ("1-3/4-5 UNC",  1.7500,   5,   "1-3/4\""),
+                ("2-4.5 UNC",    2.0000,   4.5, "2\""),
+            };
+
+            // ANSI Unified National Fine (UNF)
+            var ansiUnifiedFine = new (string designation, double nomDia, double tpi, string sizeLabel)[]
+            {
+                ("#0-80 UNF",    0.0600,  80,   "0.060\""),
+                ("#1-72 UNF",    0.0730,  72,   "0.073\""),
+                ("#2-64 UNF",    0.0860,  64,   "0.086\""),
+                ("#3-56 UNF",    0.0990,  56,   "0.099\""),
+                ("#4-48 UNF",    0.1120,  48,   "0.112\""),
+                ("#5-44 UNF",    0.1250,  44,   "0.125\""),
+                ("#6-40 UNF",    0.1380,  40,   "0.138\""),
+                ("#8-36 UNF",    0.1640,  36,   "0.164\""),
+                ("#10-32 UNF",   0.1900,  32,   "0.190\""),
+                ("#12-28 UNF",   0.2160,  28,   "0.216\""),
+                ("1/4-28 UNF",   0.2500,  28,   "1/4\""),
+                ("5/16-24 UNF",  0.3125,  24,   "5/16\""),
+                ("3/8-24 UNF",   0.3750,  24,   "3/8\""),
+                ("7/16-20 UNF",  0.4375,  20,   "7/16\""),
+                ("1/2-20 UNF",   0.5000,  20,   "1/2\""),
+                ("9/16-18 UNF",  0.5625,  18,   "9/16\""),
+                ("5/8-18 UNF",   0.6250,  18,   "5/8\""),
+                ("3/4-16 UNF",   0.7500,  16,   "3/4\""),
+                ("7/8-14 UNF",   0.8750,  14,   "7/8\""),
+                ("1-12 UNF",     1.0000,  12,   "1\""),
+                ("1-1/8-12 UNF", 1.1250,  12,   "1-1/8\""),
+                ("1-1/4-12 UNF", 1.2500,  12,   "1-1/4\""),
+                ("1-3/8-12 UNF", 1.3750,  12,   "1-3/8\""),
+                ("1-1/2-12 UNF", 1.5000,  12,   "1-1/2\""),
+            };
+
+            // Add ANSI coarse threads (external and internal)
+            foreach (var (designation, nomDia, tpi, sizeLabel) in ansiUnifiedCoarse)
+            {
+                double pitchInches = 1.0 / tpi;
+                double pitchDiaInches = nomDia - 0.64952 * pitchInches;
+                double minorDiaInches = nomDia - 1.08253 * pitchInches;
+                double cmFactor = 2.54;  // inches to cm
+
+                _allThreadStandards.Add(new ThreadStandard
+                {
+                    Designation = designation,
+                    NominalDiameter = nomDia * cmFactor,
+                    Pitch = pitchInches * cmFactor,
+                    MajorDiameter = nomDia * cmFactor,
+                    MinorDiameter = minorDiaInches * cmFactor,
+                    PitchDiameter = pitchDiaInches * cmFactor,
+                    ThreadType = "ANSI Unified Screw Threads",
+                    IsInternal = false,
+                    FullThreadName = $"ANSI Unified Screw Threads - {designation}",
+                    ThreadFamily = "ANSI",
+                    SizeLabel = sizeLabel
+                });
+
+                _allThreadStandards.Add(new ThreadStandard
+                {
+                    Designation = designation,
+                    NominalDiameter = nomDia * cmFactor,
+                    Pitch = pitchInches * cmFactor,
+                    MajorDiameter = nomDia * cmFactor,
+                    MinorDiameter = minorDiaInches * cmFactor,
+                    PitchDiameter = pitchDiaInches * cmFactor,
+                    ThreadType = "ANSI Unified Screw Threads",
+                    IsInternal = true,
+                    FullThreadName = $"ANSI Unified Screw Threads - {designation} (Internal)",
+                    ThreadFamily = "ANSI",
+                    SizeLabel = sizeLabel
+                });
+            }
+
+            // Add ANSI fine threads (external and internal)
+            foreach (var (designation, nomDia, tpi, sizeLabel) in ansiUnifiedFine)
+            {
+                double pitchInches = 1.0 / tpi;
+                double pitchDiaInches = nomDia - 0.64952 * pitchInches;
+                double minorDiaInches = nomDia - 1.08253 * pitchInches;
+                double cmFactor = 2.54;
+
+                _allThreadStandards.Add(new ThreadStandard
+                {
+                    Designation = designation,
+                    NominalDiameter = nomDia * cmFactor,
+                    Pitch = pitchInches * cmFactor,
+                    MajorDiameter = nomDia * cmFactor,
+                    MinorDiameter = minorDiaInches * cmFactor,
+                    PitchDiameter = pitchDiaInches * cmFactor,
+                    ThreadType = "ANSI Unified Screw Threads",
+                    IsInternal = false,
+                    FullThreadName = $"ANSI Unified Screw Threads - {designation}",
+                    ThreadFamily = "ANSI",
+                    SizeLabel = sizeLabel
+                });
+
+                _allThreadStandards.Add(new ThreadStandard
+                {
+                    Designation = designation,
+                    NominalDiameter = nomDia * cmFactor,
+                    Pitch = pitchInches * cmFactor,
+                    MajorDiameter = nomDia * cmFactor,
+                    MinorDiameter = minorDiaInches * cmFactor,
+                    PitchDiameter = pitchDiaInches * cmFactor,
+                    ThreadType = "ANSI Unified Screw Threads",
+                    IsInternal = true,
+                    FullThreadName = $"ANSI Unified Screw Threads - {designation} (Internal)",
+                    ThreadFamily = "ANSI",
+                    SizeLabel = sizeLabel
+                });
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Loaded {_allThreadStandards.Count} thread standards (ISO + ANSI).");
         }
 
         #endregion

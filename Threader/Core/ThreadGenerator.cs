@@ -542,12 +542,12 @@ namespace Threader.Core
                         if (options.StartFromEnd)
                         {
                             nearEndPt = endPt;
-                            trimNearEnd = !cylinderInfo.EndOpen;  // Trim if walled
+                            trimNearEnd = true;  // Always trim to prevent overshoot affecting other features
                             
                             if (threadReachesFarEnd)
                             {
                                 farEndPt = startPt;
-                                trimFarEnd = !cylinderInfo.StartOpen;  // Trim if walled
+                                trimFarEnd = true;  // Always trim to prevent overshoot affecting other features
                             }
                             else
                             {
@@ -563,12 +563,12 @@ namespace Threader.Core
                         else
                         {
                             nearEndPt = startPt;
-                            trimNearEnd = !cylinderInfo.StartOpen;  // Trim if walled
+                            trimNearEnd = true;  // Always trim to prevent overshoot affecting other features
                             
                             if (threadReachesFarEnd)
                             {
                                 farEndPt = endPt;
-                                trimFarEnd = !cylinderInfo.EndOpen;  // Trim if walled
+                                trimFarEnd = true;  // Always trim to prevent overshoot affecting other features
                             }
                             else
                             {
@@ -609,30 +609,8 @@ namespace Threader.Core
                                 farEndPt, options.FeatureName + "_TrimFar");
                         }
                         
-                        // For partial threads: also trim the walled far cylinder end
-                        // (the coil now spans the full cylinder, so excess past the far wall needs trimming too)
-                        if (!threadReachesFarEnd)
-                        {
-                            bool farCylEndWalled;
-                            double[] farCylEndPt;
-                            if (options.StartFromEnd)
-                            {
-                                farCylEndWalled = !cylinderInfo.StartOpen;
-                                farCylEndPt = startPt;
-                            }
-                            else
-                            {
-                                farCylEndWalled = !cylinderInfo.EndOpen;
-                                farCylEndPt = endPt;
-                            }
-                            
-                            if (farCylEndWalled)
-                            {
-                                double[] farCylOutward = new double[] { threadDir[0], threadDir[1], threadDir[2] };
-                                TrimCoilAtPoint(compDef, coilBody, transGeom, axisVec, farCylOutward,
-                                    farCylEndPt, options.FeatureName + "_TrimFarWall");
-                            }
-                        }
+                        // Both sides are always trimmed above, so no additional
+                        // partial-thread far-wall trim is needed.
                     }
                     catch (Exception trimEx)
                     {
