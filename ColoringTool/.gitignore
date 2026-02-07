@@ -1,0 +1,19 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# IDE
+.idea/
+*.sln.DotSettings.user
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+tmpclaude-*

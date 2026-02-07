@@ -1,0 +1,35 @@
+# Build output
+bin/
+obj/
+out/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+*.sln.DotSettings.user
+
+# NuGet
+packages/
+*.nupkg
+nuget.exe
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Temporary files
+tmpclaude-*
