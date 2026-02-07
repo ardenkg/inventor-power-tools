@@ -2,6 +2,7 @@
 bin/
 obj/
 out/
+publish/
 
 # Visual Studio
 .vs/
@@ -30,6 +31,16 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Inventor-specific (don't commit test parts)
+*.ipt
+*.iam
+*.idw
+*.ipn
 
 # Temporary files
 tmpclaude-*

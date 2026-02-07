@@ -1,13 +1,13 @@
 @echo off
 REM ============================================================================
 REM CaseSelection Add-in Uninstaller (Batch Wrapper)
-REM For Autodesk Inventor 2026
+REM For Autodesk Inventor 2022-2026
 REM ============================================================================
 
 echo.
 echo ================================================
 echo   CaseSelection Add-in Uninstaller
-echo   For Autodesk Inventor 2026
+echo   For Autodesk Inventor 2022-2026
 echo ================================================
 echo.
 

@@ -47,6 +47,7 @@ Write-Host ""
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host "  Inventor Add-ins - Install All" -ForegroundColor Cyan
 Write-Host "  CaseSelection | ColoringTool | Threader" -ForegroundColor Cyan
+Write-Host "  For Autodesk Inventor 2022-2026" -ForegroundColor Cyan
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "  Script directory: $ScriptDir" -ForegroundColor Gray
@@ -104,4 +105,5 @@ if ($failed.Count -gt 0) {
 Write-Host ""
 Write-Host "Restart Inventor to load the add-ins." -ForegroundColor Yellow
 Write-Host "All tools appear under the 'Power Tools' tab in the ribbon." -ForegroundColor Yellow
+Write-Host "Supports Inventor 2022, 2023, 2024, 2025, and 2026." -ForegroundColor Yellow
 Write-Host ""

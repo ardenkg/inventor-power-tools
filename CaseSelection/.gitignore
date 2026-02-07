@@ -1,7 +1,8 @@
-# Build outputs
+﻿# Build outputs
 bin/
 obj/
 out/
+publish/
 
 # Visual Studio
 .vs/
@@ -14,9 +15,10 @@ out/
 .vscode/
 *.code-workspace
 
-# Rider
+# Rider / JetBrains
 .idea/
 *.sln.iml
+*.sln.DotSettings.user
 
 # NuGet
 packages/
@@ -29,17 +31,17 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# Logs and databases
-*.log
-*.sql
-*.sqlite
-
-# OS generated files
+# macOS
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
 
 # Backup files
 *~
@@ -56,16 +58,16 @@ _NCrunch_*
 .*crunch*.local.xml
 nCrunchTemp_*
 
-# Resharper
+# ReSharper
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
-# Publish output
-publish/
-
-# Inventor-specific
+# Inventor-specific (don't commit test parts)
 *.ipt
 *.iam
 *.idw
 *.ipn
+
+# Temporary files
+tmpclaude-*

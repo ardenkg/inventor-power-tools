@@ -12,8 +12,8 @@
   <!-- Assembly Information -->
   <Assembly>ColoringTool.dll</Assembly>
   
-  <!-- Supported Inventor Version -->
-  <SupportedSoftwareVersionGreaterThan>29..</SupportedSoftwareVersionGreaterThan>
+  <!-- Supported Inventor Versions (2022 and later) -->
+  <SupportedSoftwareVersionGreaterThan>25..</SupportedSoftwareVersionGreaterThan>
   
   <!-- User Interface Options -->
   <UserUnloadable>true</UserUnloadable>

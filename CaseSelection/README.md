@@ -1,6 +1,6 @@
-# CaseSelection Add-in for Autodesk Inventor 2026
+﻿# CaseSelection Add-in for Autodesk Inventor
 
-A **Smart Selection** tool that brings NX-style selection intent (Boss/Pocket, Tangency, Feature Faces) into Autodesk Inventor.
+A **Smart Selection** tool that brings NX-style selection intent (Boss/Pocket, Tangency, Feature Faces) into Autodesk Inventor 2022-2026.
 
 <p align="center">
   <img src="../images/ClassSelectionInterface.PNG" alt="Class Selection Interface">
@@ -15,36 +15,36 @@ A **Smart Selection** tool that brings NX-style selection intent (Boss/Pocket, T
 
 ### Topology-Based Selection Filters
 
-- **Single Face** — Standard single face selection
-- **Tangent Faces** — Recursively selects all connected faces that are tangent (smooth transitions) via BFS
-- **Boss/Pocket Faces** — Selects faces connected by concave or convex edges, identifying pocket and boss features
-- **Adjacent Faces** — Selects all faces sharing an edge with the seed face
-- **Feature Faces** — Selects all faces created by the same feature as the seed face
-- **Connected Blend Faces** — Selects connected fillet/chamfer faces
+- **Single Face**  Standard single face selection
+- **Tangent Faces**  Recursively selects all connected faces that are tangent (smooth transitions) via BFS
+- **Boss/Pocket Faces**  Selects faces connected by concave or convex edges, identifying pocket and boss features
+- **Adjacent Faces**  Selects all faces sharing an edge with the seed face
+- **Feature Faces**  Selects all faces created by the same feature as the seed face
+- **Connected Blend Faces**  Selects connected fillet/chamfer faces
 
 ### Selection Capabilities
 
-- **Additive Selection** — Click multiple faces to build up a selection
-- **Shift+Click Deselection** — Hold Shift and click to remove faces/groups from the selection
-- **Select All** — Select all visible faces in the document
-- **Invert Selection** — Toggle between selected and unselected faces
-- **Find Similar** — Find faces with similar geometry properties to a template face
-- **Color Search** — Pick a color and find faces that match it
+- **Additive Selection**  Click multiple faces to build up a selection
+- **Shift+Click Deselection**  Hold Shift and click to remove faces/groups from the selection
+- **Select All**  Select all visible faces in the document
+- **Invert Selection**  Toggle between selected and unselected faces
+- **Find Similar**  Find faces with similar geometry properties to a template face
+- **Color Search**  Pick a color and find faces that match it
 
 ### Visual Feedback
 
-- **Blue Highlight** — Selected faces
-- **Orange Highlight** — Template faces for "Find Similar"
-- **Green Highlight** — Preview/hover feedback
+- **Blue Highlight**  Selected faces
+- **Orange Highlight**  Template faces for "Find Similar"
+- **Green Highlight**  Preview/hover feedback
 
 ### Keyboard Shortcuts
 
-- **Ctrl+J** — Open/toggle the Class Selection dialog
-- **Escape** — Close the dialog
+- **Ctrl+J**  Open/toggle the Class Selection dialog
+- **Escape**  Close the dialog
 
 ## Requirements
 
-- Autodesk Inventor 2026
+- Autodesk Inventor 2022, 2023, 2024, 2025, or 2026
 - .NET SDK 8.0 or later (for building from source)
 - Windows 10/11 x64
 
@@ -67,15 +67,19 @@ A **Smart Selection** tool that brings NX-style selection intent (Boss/Pocket, T
 - `-Configuration Release` (default) or `-Configuration Debug`
 - `-SkipBuild` to skip the build step
 
+The installer automatically detects installed Inventor versions and deploys the correct build (net48 for 2022-2024, net8.0-windows for 2025-2026).
+
 ### Manual Installation
 
 1. Build the project:
    ```powershell
    dotnet build -c Release
    ```
-2. Copy `CaseSelection.dll` and `CaseSelection.addin` to one of the following:
-   - **User:** `%APPDATA%\Autodesk\Inventor 2026\Addins\CaseSelection\`
+2. Copy `CaseSelection.dll` and `CaseSelection.addin` to:
+   - **User:** `%APPDATA%\Autodesk\Inventor <version>\Addins\CaseSelection\`
    - **Machine:** `C:\ProgramData\Autodesk\Inventor Addins\CaseSelection\`
+
+   Use the `net48` build output for Inventor 2022-2024, and `net8.0-windows` for 2025-2026.
 
 ## Uninstallation
 
@@ -95,25 +99,25 @@ A **Smart Selection** tool that brings NX-style selection intent (Boss/Pocket, T
 
 ```
 CaseSelection/
-├── StandardAddInServer.cs              # Main add-in entry point & ribbon integration
-├── CaseSelection.addin                 # Inventor add-in manifest
-├── CaseSelection.csproj                # Project file (.NET 8.0)
-├── Core/
-│   ├── SelectionFilterType.cs          # Filter type enumeration
-│   ├── SelectionManager.cs             # Core selection logic & InteractionEvents
-│   ├── TopologyAnalyzer.cs             # Topology algorithms (Boss/Pocket, Tangent, etc.)
-│   └── HighlightManager.cs            # Visual highlight feedback management
-├── UI/
-│   ├── ClassSelectionForm.cs           # Floating dialog code-behind
-│   ├── ClassSelectionForm.Designer.cs  # Form designer layout
-│   └── ClassSelectionControl.cs        # Dockable panel control (alternative UI)
-├── Properties/
-│   └── AssemblyInfo.cs                 # Assembly metadata & GUID
-├── Install-CaseSelection.ps1          # PowerShell installer
-├── Uninstall-CaseSelection.ps1        # PowerShell uninstaller
-├── Install.bat                         # Batch installer wrapper
-├── Uninstall.bat                       # Batch uninstaller wrapper
-└── README.md
++-- StandardAddInServer.cs              # Main add-in entry point & ribbon integration
++-- CaseSelection.addin                 # Inventor add-in manifest
++-- CaseSelection.csproj                # Multi-target: net48 + net8.0-windows
++-- Core/
+|   +-- SelectionFilterType.cs          # Filter type enumeration
+|   +-- SelectionManager.cs             # Core selection logic & InteractionEvents
+|   +-- TopologyAnalyzer.cs             # Topology algorithms (Boss/Pocket, Tangent, etc.)
+|   +-- HighlightManager.cs            # Visual highlight feedback management
++-- UI/
+|   +-- ClassSelectionForm.cs           # Floating dialog code-behind
+|   +-- ClassSelectionForm.Designer.cs  # Form designer layout
+|   +-- ClassSelectionControl.cs        # Dockable panel control (alternative UI)
++-- Properties/
+|   +-- AssemblyInfo.cs                 # Assembly metadata & GUID
++-- Install-CaseSelection.ps1          # PowerShell installer
++-- Uninstall-CaseSelection.ps1        # PowerShell uninstaller
++-- Install.bat                         # Batch installer wrapper
++-- Uninstall.bat                       # Batch uninstaller wrapper
++-- README.md
 ```
 
 ## Building from Source
@@ -121,19 +125,20 @@ CaseSelection/
 ```powershell
 cd CaseSelection
 dotnet build -c Release
+# Outputs: bin\Release\net48\ and bin\Release\net8.0-windows\
 ```
 
 ## Technical Details
 
 ### Topology Algorithms
 
-- **Tangent Faces** — BFS from the seed face, following edges where adjacent face normals have a dot product > 0.99 (nearly parallel). Stops at sharp edges.
-- **Boss/Pocket Faces** — BFS traversal following concave or convex edges. Concavity is determined by face normal directions at the edge and edge direction relative to face centers.
+- **Tangent Faces**  BFS from the seed face, following edges where adjacent face normals have a dot product > 0.99 (nearly parallel). Stops at sharp edges.
+- **Boss/Pocket Faces**  BFS traversal following concave or convex edges. Concavity is determined by face normal directions at the edge and edge direction relative to face centers.
 
 ### InteractionEvents
 
-- `OnPreSelect` — Lightweight check; only verifies the object is a Face
-- `OnSelect` — Full topology logic runs here
+- `OnPreSelect`  Lightweight check; only verifies the object is a Face
+- `OnSelect`  Full topology logic runs here
 - Uses `HighlightSet` for solid face highlighting
 
 ## License

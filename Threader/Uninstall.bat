@@ -1,7 +1,7 @@
 @echo off
 echo ================================================
 echo   Threader Add-in Uninstaller
-echo   For Autodesk Inventor 2026
+echo   For Autodesk Inventor 2022-2026
 echo ================================================
 echo.
 echo Running uninstall script...

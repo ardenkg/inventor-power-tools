@@ -2,6 +2,7 @@
 echo ================================================
 echo   Inventor Add-ins - Install All
 echo   CaseSelection ^| ColoringTool ^| Threader
+echo   For Autodesk Inventor 2022-2026
 echo ================================================
 echo.
 echo Running installation script...
