@@ -18,6 +18,10 @@ Custom add-ins for **Autodesk Inventor 2026** that extend the modeling environme
   <img src="images/ThreadExamples.png" width="45%" alt="Thread Examples">
 </p>
 
+<p align="center">
+  <img src="images/TypeFIlters.png" width="45%" alt="Selection Filter Types">
+</p>
+
 ## Add-ins
 
 | Add-in | Description |

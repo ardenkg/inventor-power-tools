@@ -6,6 +6,10 @@ A face coloring tool for Autodesk Inventor 2026 that lets you select faces using
   <img src="../images/ColoringToolInterface.png" alt="Coloring Tool Interface">
 </p>
 
+<p align="center">
+  <img src="../images/TypeFIlters.png" alt="Selection Filter Types">
+</p>
+
 ## Features
 
 ### Smart Face Selection
