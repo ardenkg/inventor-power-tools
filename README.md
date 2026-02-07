@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Inventor 2026](https://img.shields.io/badge/Inventor-2026-blue.svg)](https://www.autodesk.com/products/inventor)
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
-[![GitHub Release](https://img.shields.io/github/v/release/ardenkg/Power-Tools-for-Inventor-2026)](https://github.com/ardenkg/Power-Tools-for-Inventor-2026/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/ardenkg/Power-Tools-for-Autodesk-Inventor-2026)](https://github.com/ardenkg/Power-Tools-for-Autodesk-Inventor-2026/releases)
 
 Custom add-ins for **Autodesk Inventor 2026** that extend the modeling environment with smart selection, face coloring, and physical thread generation. All tools live under the **Power Tools** tab in Inventor's ribbon.
 
