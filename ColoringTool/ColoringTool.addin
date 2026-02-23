@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Addin Type="Standard">
+  
+  <!-- Unique Add-in GUID - Must match AssemblyInfo.cs GUID -->
+  <ClassId>{B2C3D4E5-F6A7-8901-BCDE-F23456789012}</ClassId>
+  
+  <!-- Add-in Display Information -->
+  <ClientId>{B2C3D4E5-F6A7-8901-BCDE-F23456789012}</ClientId>
+  <DisplayName>Coloring Tool - Face Color Application</DisplayName>
+  <Description>Face Coloring Tool that allows selecting faces and applying colors to them in Autodesk Inventor.</Description>
+  
+  <!-- Assembly Information -->
+  <Assembly>ColoringTool.dll</Assembly>
+  
+  <!-- Supported Inventor Versions (2022 and later) -->
+  <SupportedSoftwareVersionGreaterThan>25..</SupportedSoftwareVersionGreaterThan>
+  
+  <!-- User Interface Options -->
+  <UserUnloadable>true</UserUnloadable>
+  <LoadAutomatically>true</LoadAutomatically>
+  <Hidden>false</Hidden>
+  
+  <!-- Additional Metadata -->
+  <UserInterfaceVersion>1</UserInterfaceVersion>
+  
+</Addin>

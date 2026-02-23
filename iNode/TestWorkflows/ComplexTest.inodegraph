@@ -1,0 +1,145 @@
+{
+  "Version": 1,
+  "Nodes": [
+    {
+      "Id": "10000000-0000-0000-0000-000000000001",
+      "TypeName": "Note",
+      "X": -400,
+      "Y": -250,
+      "Parameters": { "Text": "=== iNode Test Workflow ===\n1. Box → Fillet → Bake\n2. Math: 5+3 → Display\n3. SketchCircle → Extrude → Bake" }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000010",
+      "TypeName": "Number",
+      "X": -400,
+      "Y": -100,
+      "Parameters": { "CurrentValue": 20.0 }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000011",
+      "TypeName": "Box",
+      "X": -150,
+      "Y": -100,
+      "Parameters": {}
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000012",
+      "TypeName": "DeconstructBody",
+      "X": 100,
+      "Y": -100,
+      "Parameters": {}
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000013",
+      "TypeName": "FilterEdges",
+      "X": 350,
+      "Y": -100,
+      "Parameters": { "Mode": "All" }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000014",
+      "TypeName": "Number",
+      "X": 350,
+      "Y": -250,
+      "Parameters": { "CurrentValue": 2.0 }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000015",
+      "TypeName": "Fillet",
+      "X": 600,
+      "Y": -100,
+      "Parameters": {}
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000016",
+      "TypeName": "Bake",
+      "X": 850,
+      "Y": -100,
+      "Parameters": { "FeatureName": "Filleted Box" }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000020",
+      "TypeName": "Number",
+      "X": -400,
+      "Y": 100,
+      "Parameters": { "CurrentValue": 5.0 }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000021",
+      "TypeName": "Number",
+      "X": -400,
+      "Y": 200,
+      "Parameters": { "CurrentValue": 3.0 }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000022",
+      "TypeName": "Add",
+      "X": -150,
+      "Y": 150,
+      "Parameters": {}
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000023",
+      "TypeName": "Display",
+      "X": 100,
+      "Y": 150,
+      "Parameters": { "Label": "5 + 3 =" }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000030",
+      "TypeName": "Number",
+      "X": -400,
+      "Y": 350,
+      "Parameters": { "CurrentValue": 5.0 }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000031",
+      "TypeName": "Number",
+      "X": -400,
+      "Y": 450,
+      "Parameters": { "CurrentValue": 20.0 }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000032",
+      "TypeName": "SketchCircle",
+      "X": -150,
+      "Y": 400,
+      "Parameters": {}
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000035",
+      "TypeName": "Extrude",
+      "X": 350,
+      "Y": 400,
+      "Parameters": { "Direction": "Positive", "Operation": "NewBody" }
+    },
+    {
+      "Id": "10000000-0000-0000-0000-000000000036",
+      "TypeName": "Bake",
+      "X": 600,
+      "Y": 400,
+      "Parameters": { "FeatureName": "Extruded Circle" }
+    }
+  ],
+  "Connections": [
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000010", "SourcePort": "Value", "TargetNodeId": "10000000-0000-0000-0000-000000000011", "TargetPort": "X" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000010", "SourcePort": "Value", "TargetNodeId": "10000000-0000-0000-0000-000000000011", "TargetPort": "Y" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000010", "SourcePort": "Value", "TargetNodeId": "10000000-0000-0000-0000-000000000011", "TargetPort": "Z" },
+
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000011", "SourcePort": "Body", "TargetNodeId": "10000000-0000-0000-0000-000000000012", "TargetPort": "Body" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000012", "SourcePort": "Edges", "TargetNodeId": "10000000-0000-0000-0000-000000000013", "TargetPort": "Edges" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000011", "SourcePort": "Body", "TargetNodeId": "10000000-0000-0000-0000-000000000015", "TargetPort": "Body" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000013", "SourcePort": "Result", "TargetNodeId": "10000000-0000-0000-0000-000000000015", "TargetPort": "Edges" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000014", "SourcePort": "Value", "TargetNodeId": "10000000-0000-0000-0000-000000000015", "TargetPort": "Radius" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000015", "SourcePort": "Body", "TargetNodeId": "10000000-0000-0000-0000-000000000016", "TargetPort": "Body" },
+
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000020", "SourcePort": "Value", "TargetNodeId": "10000000-0000-0000-0000-000000000022", "TargetPort": "A" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000021", "SourcePort": "Value", "TargetNodeId": "10000000-0000-0000-0000-000000000022", "TargetPort": "B" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000022", "SourcePort": "Result", "TargetNodeId": "10000000-0000-0000-0000-000000000023", "TargetPort": "Value" },
+
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000030", "SourcePort": "Value", "TargetNodeId": "10000000-0000-0000-0000-000000000032", "TargetPort": "Radius" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000031", "SourcePort": "Value", "TargetNodeId": "10000000-0000-0000-0000-000000000035", "TargetPort": "Distance" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000032", "SourcePort": "Profile", "TargetNodeId": "10000000-0000-0000-0000-000000000035", "TargetPort": "Profile" },
+    { "SourceNodeId": "10000000-0000-0000-0000-000000000035", "SourcePort": "Body", "TargetNodeId": "10000000-0000-0000-0000-000000000036", "TargetPort": "Body" }
+  ]
+}
